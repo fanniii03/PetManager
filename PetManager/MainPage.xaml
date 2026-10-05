@@ -5,12 +5,18 @@
              xmlns:local="clr-namespace:PetManager">
 
     <ContentPage.Resources>
+        <local:BirthDateToAgeConverter x:Key="AgeConverter" />
+
         <DataTemplate x:Key="petsItem" x:DataType="local:Pet">
             <Border Margin="5" Padding="5"
     Stroke="Brown" StrokeThickness="2" StrokeShape="RoundRectangle 10">
                 <VerticalStackLayout>
                     <Label FontSize="Medium" FontAttributes="Bold" Text="{Binding Name}"/>
                     <Label FontSize="Small" Text="{Binding Species}"/>
+                    <Label FontSize="Small"
+                           Text="{Binding BirthDate, 
+                        Converter={StaticResource AgeConverter},
+                        StringFormat='{0} year(s) old'}" />
                 </VerticalStackLayout>
             </Border>
         </DataTemplate>
