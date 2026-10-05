@@ -19,7 +19,8 @@
     <Grid RowDefinitions="Auto,*,Auto"  WidthRequest="300" RowSpacing="10"
           x:DataType="local:MainPageViewModel">
         <HorizontalStackLayout Spacing="10" HorizontalOptions="Center"
-                           x:Name="buttonArea">
+                               x:Name="buttonArea"
+                               IsEnabled="{Binding IsListingOn}">
             <Button Text="New" Command="{Binding NewPetCommand}"/>
             <Button Text="Edit" Command="{Binding EditSelectedPetCommand}" />
             <Button Text="Delete" Command="{Binding DeletePetCommand}"/>
@@ -27,17 +28,19 @@
         <Border StrokeThickness="5" Stroke="Orange" StrokeShape="RoundRectangle 10"
             Grid.Row="1">
             <CollectionView ItemsSource="{Binding Pets}" 
-                    SelectedItem="{Binding SelectedPet}"
-                    SelectionMode="Single"
-                    BackgroundColor="LightYellow" 
-                    x:Name="petsCollectionView"
-                    ItemTemplate="{StaticResource petsItem}" >
+                            SelectedItem="{Binding SelectedPet}"
+                            SelectionMode="Single"
+                            BackgroundColor="LightYellow" 
+                            x:Name="petsCollectionView"
+                            ItemTemplate="{StaticResource petsItem}"
+                            IsEnabled="{Binding IsListingOn}"
+                            InputTransparent="{Binding IsEditingOn}">
 
             </CollectionView>
         </Border>
         <VerticalStackLayout Grid.Row="2"
                          x:Name="editArea"
-                         IsEnabled="False">
+                         IsEnabled="{Binding IsEditingOn}">
             <Label Text="Name" FontSize="Medium"/>
             <Entry Text="{Binding EditedPet.Name}"/>
             <Label Text="Species" FontSize="Medium"/>

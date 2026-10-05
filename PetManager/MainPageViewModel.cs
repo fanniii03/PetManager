@@ -19,6 +19,26 @@ namespace PetManager
         [ObservableProperty]
         Pet editedPet;
 
+        private bool isEditingOn;
+        public bool IsEditingOn
+        {
+            get => isEditingOn;
+            set
+            {
+                if (isEditingOn != value)
+                {
+                    isEditingOn = value;
+                    OnPropertyChanged();
+                    OnPropertyChanged(nameof(IsListingOn));
+                }
+            }
+        }
+
+        public bool IsListingOn
+        {
+            get => !isEditingOn;
+        }
+
         public MainPageViewModel()
         {
             Pets = new ObservableCollection<Pet>();
@@ -30,6 +50,7 @@ namespace PetManager
         public void EditSelectedPet()
         {
             EditedPet = SelectedPet.GetCopy();
+            IsEditingOn = true;
         }
 
         [RelayCommand]
@@ -41,12 +62,14 @@ namespace PetManager
             }
             Pets.Add(EditedPet);
             EditedPet = null;
+            IsEditingOn = false;
         }
 
         [RelayCommand]
         public void CancelEdit()
         {
             EditedPet = null;
+            IsEditingOn = false;
         }
 
         [RelayCommand]
@@ -65,6 +88,7 @@ namespace PetManager
                 Name = "New Name",
                 BirthDate = DateTime.Today
             };
+            IsEditingOn = true;
         }
     }
 }
