@@ -14,8 +14,20 @@ namespace PetManager
     {
         public ObservableCollection<Pet> Pets { get; set; }
 
-        [ObservableProperty]
-        Pet selectedPet;
+        private Pet selectedPet;
+        public Pet SelectedPet
+        {
+            get { return selectedPet; }
+            set
+            {
+                selectedPet = value;
+                OnPropertyChanged();
+                DeletePetCommand.NotifyCanExecuteChanged();
+                EditSelectedPetCommand.NotifyCanExecuteChanged();
+            }
+        }
+
+        public bool CanEditOrDelete => SelectedPet != null;
 
         [ObservableProperty]
         Pet editedPet;
@@ -47,14 +59,14 @@ namespace PetManager
             Pets.Add(new Pet() { Name = "Zoé", Species = "Francia bulldog palota pincsi", BirthDate = new DateTime(2014, 12, 14) });
         }
 
-        [RelayCommand]
+        [RelayCommand(CanExecute = nameof(CanEditOrDelete))]
         public void EditSelectedPet()
         {
             if (SelectedPet != null)
             {
-            EditedPet = SelectedPet.GetCopy();
-            IsEditingOn = true;
-        }
+                EditedPet = SelectedPet.GetCopy();
+                IsEditingOn = true;
+            }
             else
             {
                 WeakReferenceMessenger.Default
@@ -81,14 +93,15 @@ namespace PetManager
             IsEditingOn = false;
         }
 
-        [RelayCommand]
+
+        [RelayCommand(CanExecute = nameof(CanEditOrDelete))]
         public void DeletePet()
         {
             if (SelectedPet != null)
             {
-            Pets.Remove(SelectedPet);
-            SelectedPet = null;
-        }
+                Pets.Remove(SelectedPet);
+                SelectedPet = null;
+            }
             else
             {
                 WeakReferenceMessenger.Default
