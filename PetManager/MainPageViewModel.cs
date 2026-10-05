@@ -1,4 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -25,11 +26,13 @@ namespace PetManager
             Pets.Add(new Pet() { Name = "Zoé", Species = "Francia bulldog palota pincsi", BirthDate = new DateTime(2014, 12, 14) });
         }
 
+        [RelayCommand]
         public void EditSelectedPet()
         {
             EditedPet = SelectedPet.GetCopy();
         }
 
+        [RelayCommand]
         public void SavePet()
         {
             if (SelectedPet != null)
@@ -40,17 +43,20 @@ namespace PetManager
             EditedPet = null;
         }
 
+        [RelayCommand]
         public void CancelEdit()
         {
             EditedPet = null;
         }
 
+        [RelayCommand]
         public void DeletePet()
         {
             Pets.Remove(SelectedPet);
             SelectedPet = null;
         }
 
+        [RelayCommand]
         public void NewPet()
         {
             SelectedPet = null;
