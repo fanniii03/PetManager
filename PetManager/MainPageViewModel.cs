@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -49,8 +50,16 @@ namespace PetManager
         [RelayCommand]
         public void EditSelectedPet()
         {
+            if (SelectedPet != null)
+            {
             EditedPet = SelectedPet.GetCopy();
             IsEditingOn = true;
+        }
+            else
+            {
+                WeakReferenceMessenger.Default
+                    .Send("Select a pet to edit.");
+            }
         }
 
         [RelayCommand]
@@ -75,8 +84,16 @@ namespace PetManager
         [RelayCommand]
         public void DeletePet()
         {
+            if (SelectedPet != null)
+            {
             Pets.Remove(SelectedPet);
             SelectedPet = null;
+        }
+            else
+            {
+                WeakReferenceMessenger.Default
+                    .Send("Select a pet a delete.");
+            }
         }
 
         [RelayCommand]
