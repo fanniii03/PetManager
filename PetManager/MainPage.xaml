@@ -19,9 +19,9 @@
     <Grid RowDefinitions="Auto,*,Auto"  WidthRequest="300" RowSpacing="10">
         <HorizontalStackLayout Spacing="10" HorizontalOptions="Center"
                            x:Name="buttonArea">
-            <Button Text="New" Clicked="ButtonNew_OnClicked"/>
-            <Button Text="Edit" Clicked="ButtonEdit_OnClicked" />
-            <Button Text="Delete" Clicked="ButtonDelete_OnClicked"/>
+            <Button Text="New" />
+            <Button Text="Edit"  />
+            <Button Text="Delete" />
         </HorizontalStackLayout>
         <Border StrokeThickness="5" Stroke="Orange" StrokeShape="RoundRectangle 10"
             Grid.Row="1">
@@ -44,8 +44,8 @@
             <Label Text="Date of birth" FontSize="Medium"/>
             <DatePicker Date="{Binding EditedPet.BirthDate}"/>
             <HorizontalStackLayout Spacing="10" HorizontalOptions="Center">
-                <Button Text="Save" Clicked="ButtonSave_OnClicked"/>
-                <Button Text="Cancel" Clicked="ButtonCancel_OnClicked"/>
+                <Button Text="Save" />
+                <Button Text="Cancel" />
             </HorizontalStackLayout>
         </VerticalStackLayout>
 
