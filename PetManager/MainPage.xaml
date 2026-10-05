@@ -1,0 +1,54 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="PetManager.MainPage"
+             xmlns:local="clr-namespace:PetManager">
+
+    <ContentPage.Resources>
+        <DataTemplate x:Key="petsItem" x:DataType="local:Pet">
+            <Border Margin="5" Padding="5"
+    Stroke="Brown" StrokeThickness="2" StrokeShape="RoundRectangle 10">
+                <VerticalStackLayout>
+                    <Label FontSize="Medium" FontAttributes="Bold" Text="{Binding Name}"/>
+                    <Label FontSize="Small" Text="{Binding Species}"/>
+                </VerticalStackLayout>
+            </Border>
+        </DataTemplate>
+    </ContentPage.Resources>
+
+    <Grid RowDefinitions="Auto,*,Auto"  WidthRequest="300" RowSpacing="10">
+        <HorizontalStackLayout Spacing="10" HorizontalOptions="Center"
+                           x:Name="buttonArea">
+            <Button Text="New" Clicked="ButtonNew_OnClicked"/>
+            <Button Text="Edit" Clicked="ButtonEdit_OnClicked" />
+            <Button Text="Delete" Clicked="ButtonDelete_OnClicked"/>
+        </HorizontalStackLayout>
+        <Border StrokeThickness="5" Stroke="Orange" StrokeShape="RoundRectangle 10"
+            Grid.Row="1">
+            <CollectionView ItemsSource="{Binding Pets}" 
+                    SelectedItem="{Binding SelectedPet}"
+                    SelectionMode="Single"
+                    BackgroundColor="LightYellow" 
+                    x:Name="petsCollectionView"
+                    ItemTemplate="{StaticResource petsItem}" >
+
+            </CollectionView>
+        </Border>
+        <VerticalStackLayout Grid.Row="2"
+                         x:Name="editArea"
+                         IsEnabled="False">
+            <Label Text="Name" FontSize="Medium"/>
+            <Entry Text="{Binding EditedPet.Name}"/>
+            <Label Text="Species" FontSize="Medium"/>
+            <Entry Text="{Binding EditedPet.Species}"/>
+            <Label Text="Date of birth" FontSize="Medium"/>
+            <DatePicker Date="{Binding EditedPet.BirthDate}"/>
+            <HorizontalStackLayout Spacing="10" HorizontalOptions="Center">
+                <Button Text="Save" Clicked="ButtonSave_OnClicked"/>
+                <Button Text="Cancel" Clicked="ButtonCancel_OnClicked"/>
+            </HorizontalStackLayout>
+        </VerticalStackLayout>
+
+    </Grid>
+
+</ContentPage>
