@@ -1,18 +1,26 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+﻿//using Android.Media.TV;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace PetManager
 {
+    [QueryProperty(nameof(EditedPet), "EditedPet")]
     public partial class MainPageViewModel : ObservableObject
     {
+        IPetDatabase database;
         public ObservableCollection<Pet> Pets { get; set; }
+
+
+        [ObservableProperty]
+        Pet editedPet;
 
         private Pet selectedPet;
         public Pet SelectedPet
@@ -24,48 +32,66 @@ namespace PetManager
                 OnPropertyChanged();
                 DeletePetCommand.NotifyCanExecuteChanged();
                 EditSelectedPetCommand.NotifyCanExecuteChanged();
+                ShowPetDetailsCommand.NotifyCanExecuteChanged();
             }
         }
 
         public bool CanEditOrDelete => SelectedPet != null;
 
-        [ObservableProperty]
-        Pet editedPet;
-
-        private bool isEditingOn;
-        public bool IsEditingOn
+        public MainPageViewModel(IPetDatabase database)
         {
-            get => isEditingOn;
-            set
+            Pets = new ObservableCollection<Pet>();
+            this.database = database;
+        }
+
+        public async Task InitializeAsync()
+        {
+            var petList = await database.GetPetsAsync();
+            Pets.Clear();
+            petList.ForEach(p => Pets.Add(p));
+        }
+
+        async partial void OnEditedPetChanged(Pet value)
+        {
+            if (value != null)
             {
-                if (isEditingOn != value)
+                if (SelectedPet != null)
                 {
-                    isEditingOn = value;
-                    OnPropertyChanged();
-                    OnPropertyChanged(nameof(IsListingOn));
+                    Pets.Remove(SelectedPet);
+                    SelectedPet = null;
+                    await database.UpdatePetAsync(value);
                 }
+                else
+                {
+                    await database.CreatePetAsync(value);
+                }
+                Pets.Add(value);
             }
         }
 
-        public bool IsListingOn
-        {
-            get => !isEditingOn;
-        }
-
-        public MainPageViewModel()
-        {
-            Pets = new ObservableCollection<Pet>();
-            Pets.Add(new Pet() { Name = "Samu", Species = "Cat", BirthDate = new DateTime(2021, 9, 28) });
-            Pets.Add(new Pet() { Name = "Zoé", Species = "Francia bulldog palota pincsi", BirthDate = new DateTime(2014, 12, 14) });
-        }
-
         [RelayCommand(CanExecute = nameof(CanEditOrDelete))]
-        public void EditSelectedPet()
+        public async Task ShowPetDetailsAsync()
         {
             if (SelectedPet != null)
             {
-                EditedPet = SelectedPet.GetCopy();
-                IsEditingOn = true;
+                var parameter = new ShellNavigationQueryParameters
+                {
+                    {"Potato",SelectedPet}
+                };
+                await Shell.Current.GoToAsync("petdetails", parameter);
+            }
+        }
+
+        [RelayCommand(CanExecute = nameof(CanEditOrDelete))]
+        public async Task EditSelectedPet()
+        {
+            if (SelectedPet != null)
+            {
+                var parameter = new ShellNavigationQueryParameters
+                {
+                    {"Pet",SelectedPet }
+                };
+                await Shell.Current.GoToAsync("editpet", parameter);
             }
             else
             {
@@ -74,24 +100,7 @@ namespace PetManager
             }
         }
 
-        [RelayCommand]
-        public void SavePet()
-        {
-            if (SelectedPet != null)
-            {
-                Pets.Remove(SelectedPet);
-            }
-            Pets.Add(EditedPet);
-            EditedPet = null;
-            IsEditingOn = false;
-        }
 
-        [RelayCommand]
-        public void CancelEdit()
-        {
-            EditedPet = null;
-            IsEditingOn = false;
-        }
 
 
         [RelayCommand(CanExecute = nameof(CanEditOrDelete))]
@@ -99,6 +108,7 @@ namespace PetManager
         {
             if (SelectedPet != null)
             {
+                database.DeletePetAsync(SelectedPet);
                 Pets.Remove(SelectedPet);
                 SelectedPet = null;
             }
@@ -110,15 +120,14 @@ namespace PetManager
         }
 
         [RelayCommand]
-        public void NewPet()
+        public async Task NewPet()
         {
             SelectedPet = null;
-            EditedPet = new Pet()
+            var parameter = new ShellNavigationQueryParameters
             {
-                Name = "New Name",
-                BirthDate = DateTime.Today
+                {"Pet",new Pet(){BirthDate=DateTime.Today} }
             };
-            IsEditingOn = true;
+            await Shell.Current.GoToAsync("editpet", parameter);
         }
     }
 }

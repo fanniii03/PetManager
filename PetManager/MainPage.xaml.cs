@@ -1,4 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.Messaging;
+using System.Threading.Tasks;
 
 namespace PetManager
 {
@@ -6,11 +7,10 @@ namespace PetManager
     {
         MainPageViewModel vm;
 
-        public MainPage()
+        public MainPage(MainPageViewModel vm)
         {
             InitializeComponent();
-
-            vm = new MainPageViewModel();
+            this.vm = vm;
             BindingContext = vm;
 
             WeakReferenceMessenger.Default
@@ -18,6 +18,11 @@ namespace PetManager
                 {
                     await DisplayAlert("Warning", message, "OK");
                 });
+        }
+
+        private async void ContentPage_Loaded(object sender, EventArgs e)
+        {
+            await vm.InitializeAsync();
         }
     }
 }

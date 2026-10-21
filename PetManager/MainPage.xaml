@@ -2,7 +2,8 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="PetManager.MainPage"
-             xmlns:local="clr-namespace:PetManager">
+             xmlns:local="clr-namespace:PetManager"
+             Loaded="ContentPage_Loaded">
 
     <ContentPage.Resources>
         <local:BirthDateToAgeConverter x:Key="AgeConverter" />
@@ -22,14 +23,15 @@
         </DataTemplate>
     </ContentPage.Resources>
 
-    <Grid RowDefinitions="Auto,*,Auto"  WidthRequest="300" RowSpacing="10"
+    <Grid RowDefinitions="Auto,*"  WidthRequest="300" RowSpacing="10"
           x:DataType="local:MainPageViewModel">
         <HorizontalStackLayout Spacing="10" HorizontalOptions="Center"
-                               x:Name="buttonArea"
-                               IsEnabled="{Binding IsListingOn}">
+                               x:Name="buttonArea">
             <Button Text="New" Command="{Binding NewPetCommand}"/>
             <Button Text="Edit" Command="{Binding EditSelectedPetCommand}" />
             <Button Text="Delete" Command="{Binding DeletePetCommand}"/>
+            <Button Text="Details"
+                    Command="{Binding ShowPetDetailsCommand}" />
         </HorizontalStackLayout>
         <Border StrokeThickness="5" Stroke="Orange" StrokeShape="RoundRectangle 10"
             Grid.Row="1">
@@ -38,26 +40,11 @@
                             SelectionMode="Single"
                             BackgroundColor="LightYellow" 
                             x:Name="petsCollectionView"
-                            ItemTemplate="{StaticResource petsItem}"
-                            IsEnabled="{Binding IsListingOn}"
-                            InputTransparent="{Binding IsEditingOn}">
+                            ItemTemplate="{StaticResource petsItem}">
 
             </CollectionView>
         </Border>
-        <VerticalStackLayout Grid.Row="2"
-                         x:Name="editArea"
-                         IsEnabled="{Binding IsEditingOn}">
-            <Label Text="Name" FontSize="Medium"/>
-            <Entry Text="{Binding EditedPet.Name}"/>
-            <Label Text="Species" FontSize="Medium"/>
-            <Entry Text="{Binding EditedPet.Species}"/>
-            <Label Text="Date of birth" FontSize="Medium"/>
-            <DatePicker Date="{Binding EditedPet.BirthDate}"/>
-            <HorizontalStackLayout Spacing="10" HorizontalOptions="Center">
-                <Button Text="Save" Command="{Binding SavePetCommand}"/>
-                <Button Text="Cancel" Command="{Binding CancelEditCommand}"/>
-            </HorizontalStackLayout>
-        </VerticalStackLayout>
+        
 
     </Grid>
 
