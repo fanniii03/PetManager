@@ -5,6 +5,10 @@
              xmlns:local="clr-namespace:PetManager"
              Loaded="ContentPage_Loaded">
 
+    <ContentPage.BindingContext>
+        <local:MainPageViewModel />
+    </ContentPage.BindingContext>
+
     <ContentPage.Resources>
         <local:BirthDateToAgeConverter x:Key="AgeConverter" />
 

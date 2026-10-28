@@ -7,7 +7,7 @@ namespace PetManager
     {
         MainPageViewModel vm;
 
-        public MainPage(MainPageViewModel vm)
+        public MainPage()
         {
             InitializeComponent();
             //this.vm = vm;
