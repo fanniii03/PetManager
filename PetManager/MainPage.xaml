@@ -13,9 +13,11 @@
     Stroke="Brown" StrokeThickness="2" StrokeShape="RoundRectangle 10">
                 <VerticalStackLayout>
                     <Label FontSize="Medium" FontAttributes="Bold" Text="{Binding Name}"/>
-                    <Label FontSize="Small" Text="{Binding Species}"/>
-                    <Label FontSize="Small"
-                           Text="{Binding BirthDate, 
+                    <Label FontSize="Small" Text="{Binding Species}"
+                           IsVisible="{Binding 
+                        BindingContext.IsFullViewEnabled, Source={RelativeSource 
+                        AncestorType={x:Type ContentPage}}}"/>
+                    <Label FontSize="Small" Text="{Binding BirthDate,
                         Converter={StaticResource AgeConverter},
                         StringFormat='{0} year(s) old'}" />
                 </VerticalStackLayout>
@@ -33,6 +35,12 @@
             <Button Text="Details"
                     Command="{Binding ShowPetDetailsCommand}" />
         </HorizontalStackLayout>
+        <HorizontalStackLayout Spacing="10" Grid.Row="1">
+            <Label Text="Details View"
+                   VerticalOptions="Center" />
+            <Switch IsToggled="{Binding IsFullViewEnabled}" />
+        </HorizontalStackLayout>
+        
         <Border StrokeThickness="5" Stroke="Orange" StrokeShape="RoundRectangle 10"
             Grid.Row="1">
             <CollectionView ItemsSource="{Binding Pets}" 

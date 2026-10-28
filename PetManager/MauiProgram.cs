@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using CommunityToolkit.Mvvm.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 
 namespace PetManager
@@ -26,7 +27,8 @@ namespace PetManager
 #if DEBUG
     		builder.Logging.AddDebug();
 #endif
-
+            var app = builder.Build();
+            Ioc.Default.ConfigureServices(app.Services);
             return builder.Build();
         }
     }

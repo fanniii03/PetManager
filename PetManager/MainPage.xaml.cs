@@ -10,8 +10,10 @@ namespace PetManager
         public MainPage(MainPageViewModel vm)
         {
             InitializeComponent();
-            this.vm = vm;
-            BindingContext = vm;
+            //this.vm = vm;
+            //BindingContext = vm;
+
+            this.vm = this.BindingContext as MainPageViewModel ?? new MainPageViewModel();
 
             WeakReferenceMessenger.Default
                 .Register<string>(this, async (recipient, message) =>

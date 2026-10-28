@@ -1,5 +1,6 @@
 ﻿//using Android.Media.TV;
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.DependencyInjection;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using System;
@@ -37,13 +38,25 @@ namespace PetManager
         }
 
         public bool CanEditOrDelete => SelectedPet != null;
-
+        public bool IsFullViewEnabled
+        {
+            get
+            {
+                return Preferences.Default.Get("fullview", true);
+            }
+            set
+            {
+                Preferences.Default.Set("fullview",value);
+                OnPropertyChanged();
+            }
+        }
         public MainPageViewModel(IPetDatabase database)
         {
             Pets = new ObservableCollection<Pet>();
             this.database = database;
         }
-
+        public MainPageViewModel() : this(Ioc.Default.GetRequiredService<IPetDatabase>())
+        {}
         public async Task InitializeAsync()
         {
             var petList = await database.GetPetsAsync();
